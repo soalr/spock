@@ -1,0 +1,6 @@
+*.pyc
+*.log
+login.py
+run.py
+/build
+/docs
