@@ -1,6 +1,19 @@
 """
 ALL THE UTILS!
 """
+
+def pl_announce(*args):
+	def inner(cl):
+		cl.pl_announce = args
+		return cl
+	return inner
+
+def mapshort2id(data):
+	return data>>4, data&0x0F
+
+def ByteToHex(byteStr):
+	return ''.join( [ "%02X " % x for x in byteStr ] ).strip()
+
 class Vec3:
 	def __init__(self, x, y, z):
 		self.x = x
@@ -70,19 +83,7 @@ class BoundBuffer:
 		return self.buff.__len__()
 
 	def __repr__(self):
-		return 'BoundBuffer: ' + str(self.buff)
+		return 'BoundBuffer: ' + ByteToHex(self.buff)
 
 	read = recv
 	write = append
-
-def pl_announce(*args):
-	def inner(cl):
-		cl.pl_announce = args
-		return cl
-	return inner
-
-def mapshort2id(data):
-	return data>>4, data&0x0F
-
-def ByteToHex(byteStr):
-	return ''.join( [ "%02X " % x for x in byteStr ] ).strip()

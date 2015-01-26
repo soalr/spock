@@ -10,20 +10,7 @@ import select
 import time
 from spock import utils
 from spock.utils import pl_announce
-from spock.mcp import mcpacket, mcdata
-from Crypto.Cipher import AES
-
-class AESCipher:
-	def __init__(self, SharedSecret):
-		#Name courtesy of dx
-		self.encryptifier = AES.new(SharedSecret, AES.MODE_CFB, IV=SharedSecret)
-		self.decryptifier = AES.new(SharedSecret, AES.MODE_CFB, IV=SharedSecret)
-
-	def encrypt(self, data):
-		return self.encryptifier.encrypt(data)
-
-	def decrypt(self, data):
-		return self.decryptifier.decrypt(data)
+from spock.mcp import mcpacket, mcdata, mccrypto
 
 class SelectSocket:
 	def __init__(self, timer):
@@ -126,7 +113,7 @@ class NetCore:
 				self.event.emit(packet.str_ident, packet)
 
 	def enable_crypto(self, secret_key):
-		self.cipher = AESCipher(secret_key)
+		self.cipher = mccrypto.AESCipher(secret_key)
 		self.encrypted = True
 
 	def disable_crypto(self):
@@ -173,7 +160,7 @@ class NetPlugin:
 				time.sleep(1)
 			else:
 				time.sleep(timeout)
-			
+
 
 	#SOCKET_RECV - Socket is ready to recieve data
 	def handleRECV(self, name, data):

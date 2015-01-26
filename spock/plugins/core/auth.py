@@ -11,11 +11,8 @@ try:
 except ImportError:
 	import urllib2 as request
 	from urllib2 import URLError
-from Crypto.Cipher import PKCS1_v1_5
-from Crypto.PublicKey import RSA
-from Crypto import Random
 from spock import utils
-from spock.mcp import mcdata, mcpacket, yggdrasil
+from spock.mcp import mcdata, mcpacket, mccrypto, yggdrasil
 from spock.utils import pl_announce
 
 # This function courtesy of barneygale
@@ -60,7 +57,7 @@ class AuthCore:
 		return rep
 
 	def gen_shared_secret(self):
-		self.shared_secret = Random._UserFriendlyRNG.get_random_bytes(16)
+		self.shared_secret = mccrypto.get_random_bytes(16)
 		return self.shared_secret
 
 
@@ -117,7 +114,7 @@ class AuthPlugin:
 			#	return
 			print(rep)
 
-		rsa_cipher = PKCS1_v1_5.new(RSA.importKey(pubkey))
+		rsa_cipher = mccrypto.RSACipher(pubkey)
 		self.net.push(mcpacket.Packet(
 			ident = (mcdata.LOGIN_STATE, mcdata.CLIENT_TO_SERVER, 0x01),
 			data = {
